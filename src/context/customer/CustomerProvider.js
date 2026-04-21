@@ -9,12 +9,18 @@ export function CustomerProvider({ children }) {
   });
   const [customerDraft, setCustomerDraft] = useState(createEmptyCustomerForm());
 
+  const resetListFilters = () => setListFilters({
+    nombre: '',
+    identificacion: '',
+  });
+
   const resetCustomerDraft = () => setCustomerDraft(createEmptyCustomerForm());
 
   const value = useMemo(
     () => ({
       listFilters,
       setListFilters,
+      resetListFilters,
       customerDraft,
       setCustomerDraft,
       resetCustomerDraft,

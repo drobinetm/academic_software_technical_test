@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { FeedbackContext } from './FeedbackContext';
 
 const initialFeedback = {
@@ -10,20 +10,20 @@ const initialFeedback = {
 export function FeedbackProvider({ children }) {
   const [feedback, setFeedback] = useState(initialFeedback);
 
-  const showFeedback = ({ message, severity = 'info' }) => {
+  const showFeedback = useCallback(({ message, severity = 'info' }) => {
     setFeedback({
       open: true,
       severity,
       message,
     });
-  };
+  }, []);
 
-  const closeFeedback = () => {
+  const closeFeedback = useCallback(() => {
     setFeedback((current) => ({
       ...current,
       open: false,
     }));
-  };
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -31,7 +31,7 @@ export function FeedbackProvider({ children }) {
       showFeedback,
       closeFeedback,
     }),
-    [feedback]
+    [closeFeedback, feedback, showFeedback]
   );
 
   return <FeedbackContext.Provider value={value}>{children}</FeedbackContext.Provider>;

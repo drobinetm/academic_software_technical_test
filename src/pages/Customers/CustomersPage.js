@@ -17,6 +17,7 @@ import { CustomerListTable } from '../../components/customer/CustomerListTable';
 import { ConfirmationDialog } from '../../components/common/ConfirmationDialog';
 import { LoadingFallback } from '../../components/common/LoadingFallback';
 import { MessageDialog } from '../../components/common/MessageDialog';
+import { createSecondaryActionButtonStyle, createSurfacePanelStyle } from '../../components/layout/sharedPageStyles';
 import { ROUTES, getCustomerEditRoute } from '../../constants/routes';
 import { useAuth } from '../../hooks/useAuth';
 import { useCustomerView } from '../../hooks/useCustomerView';
@@ -24,13 +25,7 @@ import { deleteCustomerRequest, getCustomersRequest } from '../../services/custo
 import { getApiErrorMessage } from '../../utils/api';
 
 const useStyles = makeStyles((theme) => ({
-  panel: {
-    padding: theme.spacing(3),
-    borderRadius: theme.layout.surface.cardRadius,
-    background: theme.layout.surface.cardBackground,
-    border: `1px solid ${theme.layout.surface.cardBorder}`,
-    boxShadow: theme.layout.surface.cardShadow,
-  },
+  panel: createSurfacePanelStyle(theme),
   panelTitle: {
     fontWeight: 700,
     color: theme.palette.text.primary,
@@ -56,26 +51,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
   },
-  actionButton: {
-    minWidth: 0,
-    height: 40,
-    padding: theme.spacing(0.75, 1.75),
-    borderRadius: 0,
-    fontWeight: 700,
-    boxShadow: 'none',
-    border: 'none',
-    backgroundColor: theme.layout.mode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f7f9fc',
-    color: theme.layout.mode === 'dark' ? theme.palette.text.primary : '#4f6781',
-    '& .MuiButton-startIcon': {
-      marginRight: theme.spacing(1),
-      marginLeft: 0,
-      color: theme.layout.mode === 'dark' ? theme.palette.primary.main : '#607d94',
-    },
-    '&:hover': {
-      boxShadow: 'none',
-      backgroundColor: theme.layout.mode === 'dark' ? 'rgba(255, 255, 255, 0.06)' : '#eef3f8',
-    },
-  },
+  actionButton: createSecondaryActionButtonStyle(theme),
   searchButtonWrap: {
     display: 'flex',
     alignItems: 'center',
@@ -107,7 +83,8 @@ export function CustomersPage() {
   const classes = useStyles();
   const history = useHistory();
   const { userid } = useAuth();
-  const { listFilters, setListFilters } = useCustomerView();
+  const { listFilters, setListFilters, resetListFilters } = useCustomerView();
+  const [initialFilters] = useState(() => listFilters);
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleteState, setDeleteState] = useState({
@@ -153,8 +130,8 @@ export function CustomersPage() {
   }, [userid]);
 
   useEffect(() => {
-    loadCustomers({ nombre: '', identificacion: '' });
-  }, [loadCustomers]);
+    loadCustomers(initialFilters);
+  }, [initialFilters, loadCustomers]);
 
   const handleFilterChange = (field) => (event) => {
     setListFilters((current) => ({
@@ -165,6 +142,11 @@ export function CustomersPage() {
 
   const handleSearch = () => {
     loadCustomers(listFilters);
+  };
+
+  const handleBack = () => {
+    resetListFilters();
+    history.push(ROUTES.home);
   };
 
   const handleDeleteConfirm = async () => {
@@ -186,7 +168,7 @@ export function CustomersPage() {
         message: 'El cliente fue eliminado correctamente.',
         severity: 'success',
       });
-      loadCustomers();
+      await loadCustomers(listFilters);
     } catch (error) {
       setDeleteState({ open: false, customer: null, loading: false });
       setMessageDialog({
@@ -218,7 +200,7 @@ export function CustomersPage() {
             <Button
               variant="outlined"
               startIcon={<ArrowBackOutlinedIcon />}
-              onClick={() => history.push(ROUTES.home)}
+              onClick={handleBack}
               className={classes.actionButton}
             >
               Regresar

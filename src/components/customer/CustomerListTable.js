@@ -123,7 +123,7 @@ export function CustomerListTable({ rows, onEdit, onDelete }) {
                 <Box className={classes.emptyState}>
                   <Typography variant="h6">No se encontraron clientes</Typography>
                   <Typography variant="body2" color="textSecondary">
-                    Ajusta los filtros y ejecuta la busqueda nuevamente.
+                    Ajusta los filtros y ejecuta la búsqueda nuevamente.
                   </Typography>
                 </Box>
               </TableCell>

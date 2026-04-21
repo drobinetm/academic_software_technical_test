@@ -85,16 +85,16 @@ const createAppTheme = (mode) => {
     layout: {
       mode,
       appBar: {
-        background: isDark ? '#101720' : '#f7f9fc',
-        border: isDark ? '#243444' : '#d6dee8',
-        text: isDark ? '#edf2f7' : '#162535',
-        logoutBackground: isDark ? '#1a2430' : '#ffffff',
-        logoutText: isDark ? '#edf2f7' : '#204a78',
-        selectorBackground: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(22, 37, 53, 0.04)',
-        selectorBorder: isDark ? 'rgba(153, 167, 184, 0.16)' : 'rgba(22, 37, 53, 0.10)',
-        selectorText: isDark ? '#dbe5f0' : '#4c5d70',
-        selectorActiveBackground: isDark ? '#223244' : '#204a78',
-        selectorActiveText: '#ffffff',
+        background: isDark ? '#101720' : 'rgb(0 21 42)',
+        border: isDark ? '#243444' : 'rgb(52 194 254)',
+        text: isDark ? '#edf2f7' : '#edf6ff',
+        logoutBackground: isDark ? '#1a2430' : 'rgba(255, 255, 255, 0.08)',
+        logoutText: isDark ? '#edf2f7' : '#edf6ff',
+        selectorBackground: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.08)',
+        selectorBorder: isDark ? 'rgba(153, 167, 184, 0.16)' : 'rgba(52, 194, 254, 0.45)',
+        selectorText: isDark ? '#dbe5f0' : '#dff6ff',
+        selectorActiveBackground: isDark ? '#223244' : 'rgb(52 194 254)',
+        selectorActiveText: isDark ? '#ffffff' : 'rgb(0 21 42)',
       },
       drawer: {
         background: isDark

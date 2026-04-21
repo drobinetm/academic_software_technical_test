@@ -364,7 +364,7 @@ const useStyles = makeStyles((theme) => ({
     width: 34,
     height: 34,
     '&:hover': {
-      backgroundColor: theme.palette.common.white,
+      backgroundColor: theme.layout.appBar.selectorBackground,
     },
   },
 }));
@@ -514,7 +514,7 @@ export function AppShell({ title, subtitle, children }) {
             </IconButton>
 
             <Typography variant="subtitle1" className={classes.brand}>
-              COMPANIA DE PRUEBA
+              COMPANIA PRUEBA
             </Typography>
           </Box>
 

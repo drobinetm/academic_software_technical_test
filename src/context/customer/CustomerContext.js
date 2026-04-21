@@ -8,6 +8,7 @@ export const CustomerContext = React.createContext({
   },
   customerDraft: createEmptyCustomerForm(),
   setListFilters: () => {},
+  resetListFilters: () => {},
   setCustomerDraft: () => {},
   resetCustomerDraft: () => {},
 });

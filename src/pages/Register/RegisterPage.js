@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import { useHistory } from 'react-router-dom';
 import { AuthLayout } from '../../components/layout/AuthLayout';
 import { FormTextField } from '../../components/common/FormTextField';
@@ -74,7 +75,11 @@ export function RegisterPage() {
   };
 
   return (
-    <AuthLayout title="Registro" subtitle="Crea una nueva cuenta del sistema con las reglas de seguridad requeridas.">
+    <AuthLayout
+      title="Registro"
+      subtitle="Crea una nueva cuenta del sistema con las reglas de seguridad requeridas."
+      icon={PersonAddOutlinedIcon}
+    >
       <form onSubmit={handleSubmit} noValidate>
         <FormTextField
           label="Nombre de usuario *"

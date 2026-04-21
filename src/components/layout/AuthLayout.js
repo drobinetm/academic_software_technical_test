@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Container, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 const useStyles = makeStyles((theme) => ({
   page: {
@@ -34,6 +35,20 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(0.5),
     display: 'none',
   },
+  iconWrap: {
+    width: 72,
+    height: 72,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: theme.spacing(0, 'auto', 2.5),
+    borderRadius: '50%',
+    backgroundColor: theme.layout.mode === 'dark' ? 'rgba(126, 166, 255, 0.14)' : 'rgba(32, 74, 120, 0.10)',
+    color: theme.palette.primary.main,
+  },
+  icon: {
+    fontSize: '2rem',
+  },
   subtitle: {
     display: 'none',
   },
@@ -49,16 +64,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function AuthLayout({ title, subtitle, children }) {
+export function AuthLayout({ title, subtitle, icon, children }) {
   const classes = useStyles();
+  const IconComponent = icon || LockOutlinedIcon;
 
   return (
     <Box className={classes.page}>
       <Container maxWidth="xs">
         <Paper className={classes.panel} elevation={0}>
           <Typography variant="overline" className={classes.brand}>
-            Compania de Prueba
+              COMPANIA PRUEBA
           </Typography>
+          <Box className={classes.iconWrap}>
+            <IconComponent className={classes.icon} />
+          </Box>
           <Typography variant="h4" gutterBottom className={classes.title}>
             {title}
           </Typography>

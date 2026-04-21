@@ -7,7 +7,9 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowForwardOutlinedIcon from '@material-ui/icons/ArrowForwardOutlined';
 import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined';
+import { useHistory } from 'react-router-dom';
 import { AppShell } from '../../components/layout/AppShell';
+import { ROUTES } from '../../constants/routes';
 
 const useStyles = makeStyles((theme) => ({
   page: {
@@ -116,6 +118,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function HomePage() {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <AppShell>
@@ -128,19 +131,23 @@ export function HomePage() {
                 <DashboardOutlinedIcon fontSize="large" />
               </Box>
               <Typography className={classes.welcomeTitle}>Bienvenido</Typography>
-              <Typography className={classes.welcomeDescription}>
-                Este dashboard resume el estado del negocio con foco en clientes, ritmo comercial y seguimiento operativo.
-              </Typography>
               <Box className={classes.actionRow}>
-                <Button variant="contained" color="primary" endIcon={<ArrowForwardOutlinedIcon />}>Consulta clientes</Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  endIcon={<ArrowForwardOutlinedIcon />}
+                  onClick={() => history.push(ROUTES.customers)}
+                >
+                  Consulta clientes
+                </Button>
               </Box>
             </Box>
 
             <Box className={classes.statusCard}>
-              <Typography className={classes.eyebrow}>Estado general</Typography>
-              <Typography className={classes.compactValue}>Operativo</Typography>
+              <Typography className={classes.eyebrow}>Gestion de clientes</Typography>
+              <Typography className={classes.compactValue}>Sistema activo</Typography>
               <Typography variant="body2" className={classes.mutedText}>
-                Flujo estable, buena respuesta del equipo y cartera bajo control.
+                Administra registros, consultas y actualizaciones de clientes desde un solo lugar.
               </Typography>
             </Box>
           </Box>

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useReducer } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
 import { AUTH_UNAUTHORIZED_EVENT, STORAGE_KEYS } from '../../constants/storage';
 import { loginRequest, registerRequest } from '../../services/auth/authService';
 import { setApiToken } from '../../services/api/client';
@@ -79,7 +79,7 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const login = async ({ username, password, rememberMe }) => {
+  const login = useCallback(async ({ username, password, rememberMe }) => {
     try {
       const response = await loginRequest({ username, password });
       const session = {
@@ -108,31 +108,31 @@ export function AuthProvider({ children }) {
     } catch (error) {
       throw new Error(getApiErrorMessage(error, 'No se pudo iniciar sesion.'));
     }
-  };
+  }, []);
 
-  const register = async (payload) => {
+  const register = useCallback(async (payload) => {
     try {
       return await registerRequest(payload);
     } catch (error) {
       throw new Error(getApiErrorMessage(error, 'No se pudo completar el registro.'));
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     clearSession();
     dispatch({ type: 'LOGOUT' });
-  };
+  }, []);
 
-  const getRememberedUsername = () => readStorageValue(STORAGE_KEYS.rememberedUsername, '');
+  const getRememberedUsername = useCallback(() => readStorageValue(STORAGE_KEYS.rememberedUsername, ''), []);
 
-  const setRememberedUsername = (username) => {
+  const setRememberedUsername = useCallback((username) => {
     if (username) {
       writeStorageValue(STORAGE_KEYS.rememberedUsername, username);
       return;
     }
 
     removeStorageValue(STORAGE_KEYS.rememberedUsername);
-  };
+  }, []);
 
   const contextValue = useMemo(
     () => ({
@@ -144,7 +144,7 @@ export function AuthProvider({ children }) {
       getRememberedUsername,
       setRememberedUsername,
     }),
-    [state]
+    [getRememberedUsername, login, logout, register, setRememberedUsername, state]
   );
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
