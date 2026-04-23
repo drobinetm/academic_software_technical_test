@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     background: theme.layout.surface.cardBackground,
     border: 'none',
     boxShadow: theme.layout.surface.cardShadow,
-    overflow: 'hidden',
+    overflowX: 'auto',
     borderRadius: 0,
   },
   table: {

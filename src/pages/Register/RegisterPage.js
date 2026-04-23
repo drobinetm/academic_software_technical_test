@@ -10,19 +10,19 @@ import { useAuth } from '../../hooks/useAuth';
 import { useFeedback } from '../../hooks/useFeedback';
 import { getValidationErrors, registerSchema } from '../../utils/validators';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   submitButton: {
     height: 52,
     fontSize: '0.95rem',
     letterSpacing: '0.02em',
   },
   submitBox: {
-    marginTop: 20,
+    marginTop: theme.spacing(2.5),
   },
   loginLink: {
     color: '#2d98f0',
     display: 'inline-block',
-    marginTop: 24,
+    marginTop: theme.spacing(3),
     fontSize: '0.95rem',
     textAlign: 'left',
   },

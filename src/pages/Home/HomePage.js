@@ -87,7 +87,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   statusCard: {
-    minWidth: 260,
     alignSelf: 'flex-start',
     padding: theme.spacing(2.5),
     borderRadius: 22,

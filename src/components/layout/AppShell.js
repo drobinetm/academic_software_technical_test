@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AppBar,
   Avatar,
@@ -60,6 +60,14 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 48,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      minHeight: 'auto',
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      rowGap: theme.spacing(1),
+    },
   },
   brand: {
     fontWeight: 700,
@@ -70,6 +78,11 @@ const useStyles = makeStyles((theme) => ({
   topBrand: {
     display: 'flex',
     alignItems: 'center',
+    minWidth: 0,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      justifyContent: 'space-between',
+    },
   },
   drawerPaper: {
     padding: 0,
@@ -273,7 +286,6 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     width: '100%',
-    paddingTop: 76,
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
     paddingBottom: theme.spacing(4),
@@ -283,7 +295,6 @@ const useStyles = makeStyles((theme) => ({
     }),
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-      paddingTop: 72,
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
     },
@@ -293,15 +304,12 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     minHeight: 'calc(100vh - 136px)',
   },
-  topUser: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1.5),
-  },
   topUsername: {
     color: theme.layout.appBar.text,
     fontWeight: 700,
     fontSize: '0.95rem',
+    marginRight: theme.spacing(1),
+    minWidth: 0,
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },
@@ -311,24 +319,32 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     gap: theme.spacing(1.5),
     marginLeft: 'auto',
+    minWidth: 0,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      marginLeft: 0,
+      justifyContent: 'space-between',
+    },
     [theme.breakpoints.down('xs')]: {
       gap: theme.spacing(1),
-      flexWrap: 'wrap',
       justifyContent: 'flex-end',
     },
+  },
+  toolbarActions: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    flexShrink: 0,
   },
   themeButtons: {
     display: 'inline-flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
     padding: theme.spacing(0.5),
-    marginRight: theme.spacing(1),
     borderRadius: 999,
     border: `1px solid ${theme.layout.appBar.selectorBorder}`,
     backgroundColor: theme.layout.appBar.selectorBackground,
-    [theme.breakpoints.down('xs')]: {
-      marginRight: theme.spacing(0.5),
-    },
+    flexShrink: 0,
   },
   themeButton: {
     minWidth: 0,
@@ -363,6 +379,7 @@ const useStyles = makeStyles((theme) => ({
     border: 'none',
     width: 34,
     height: 34,
+    flexShrink: 0,
     '&:hover': {
       backgroundColor: theme.layout.appBar.selectorBackground,
     },
@@ -446,6 +463,8 @@ export function AppShell({ title, subtitle, children }) {
   const { themeMode, setThemeMode } = useThemeMode();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [appBarHeight, setAppBarHeight] = useState(52);
+  const appBarRef = useRef(null);
 
   const username = user?.username || 'Nombre de Usuario';
   const drawerWidth = isMobile ? DRAWER_WIDTH : collapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH;
@@ -476,6 +495,38 @@ export function AppShell({ title, subtitle, children }) {
     handleToggleCollapse();
   };
 
+  useEffect(() => {
+    const node = appBarRef.current;
+
+    if (!node) {
+      return undefined;
+    }
+
+    const updateHeight = () => {
+      setAppBarHeight(node.getBoundingClientRect().height);
+    };
+
+    updateHeight();
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(() => {
+        updateHeight();
+      });
+
+      resizeObserver.observe(node);
+
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+
+    window.addEventListener('resize', updateHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, []);
+
   const drawer = (
     <ShellDrawer
       collapsed={collapsed}
@@ -493,6 +544,7 @@ export function AppShell({ title, subtitle, children }) {
   return (
     <Box className={classes.root}>
       <AppBar
+        ref={appBarRef}
         position="fixed"
         color="primary"
         className={classes.appBar}
@@ -519,26 +571,26 @@ export function AppShell({ title, subtitle, children }) {
           </Box>
 
           <Box className={classes.toolbarTools}>
-            <Box className={classes.themeButtons} aria-label="selector de tema" role="group">
-              {themeOptions.map((option) => (
-                <Button
-                  key={option.value}
-                  type="button"
-                  size="small"
-                  className={`${classes.themeButton} ${themeMode === option.value ? classes.activeThemeButton : ''}`}
-                  onClick={() => setThemeMode(option.value)}
-                  aria-label={option.label}
-                  title={option.label}
-                >
-                  {option.icon}
-                </Button>
-              ))}
-            </Box>
+            <Typography variant="subtitle1" className={classes.topUsername}>
+              {username}
+            </Typography>
 
-            <Box className={classes.topUser}>
-              <Typography variant="subtitle1" className={classes.topUsername}>
-                {username}
-              </Typography>
+            <Box className={classes.toolbarActions}>
+              <Box className={classes.themeButtons} aria-label="selector de tema" role="group">
+                {themeOptions.map((option) => (
+                  <Button
+                    key={option.value}
+                    type="button"
+                    size="small"
+                    className={`${classes.themeButton} ${themeMode === option.value ? classes.activeThemeButton : ''}`}
+                    onClick={() => setThemeMode(option.value)}
+                    aria-label={option.label}
+                    title={option.label}
+                  >
+                    {option.icon}
+                  </Button>
+                ))}
+              </Box>
               <IconButton color="inherit" onClick={handleLogout} aria-label="cerrar sesion" className={classes.toolbarLogout}>
                 <ExitToAppOutlinedIcon fontSize="small" />
               </IconButton>
@@ -572,7 +624,10 @@ export function AppShell({ title, subtitle, children }) {
         </Drawer>
       </Hidden>
 
-      <main className={classes.content} style={isMobile ? { width: '100%' } : { width: `calc(100% - ${drawerWidth}px)` }}>
+      <main
+        className={classes.content}
+        style={isMobile ? { width: '100%', paddingTop: appBarHeight + theme.spacing(2) } : { width: `calc(100% - ${drawerWidth}px)`, paddingTop: appBarHeight + theme.spacing(3) }}
+      >
         <Box className={classes.pageContainer}>
           {title || subtitle ? (
             <Box marginBottom={3}>

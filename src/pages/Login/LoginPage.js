@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   eyeButton: {
     color: '#566979',
-    padding: 8,
+    padding: theme.spacing(1),
   },
 }));
 
